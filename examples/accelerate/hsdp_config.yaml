@@ -1,0 +1,22 @@
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: HSDP
+downcast_bf16: 'no'
+hsdp_config:
+  hsdp_auto_wrap_policy: TRANSFORMER_BASED_WRAP
+  hsdp_cpu_ram_efficient_loading: true
+  hsdp_offload_params: false
+  hsdp_reshard_after_forward: true
+  hsdp_state_dict_type: FULL_STATE_DICT
+  hsdp_version: 1
+machine_rank: 0
+main_training_function: main
+mixed_precision: bf16  # or fp16
+num_machines: 1  # the number of nodes
+num_processes: 2  # the number of GPUs in all nodes
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
