@@ -160,6 +160,12 @@ def prepare_model_for_training(model: "PreTrainedModel", model_args: "ModelArgum
     ):
         model_args.use_reentrant_gc = False
         logger.warning_rank0("You are using fsdp2, `use_reentrant_gc` has been set to False.")
+    elif (
+        os.environ.get("ACCELERATE_USE_HSDP", "false").lower() == "true"
+        and int(os.environ.get("HSDP_VERSION", "0")) == 1
+    ):
+        model_args.use_reentrant_gc = False
+        logger.warning_rank0("You are using hsdp, `use_reentrant_gc` has been set to False.")
 
     if not model_args.disable_gradient_checkpointing:
         if not getattr(model, "supports_gradient_checkpointing", False):

@@ -19,7 +19,7 @@ import torch
 from peft import PeftModel
 from transformers import GenerationMixin, PreTrainedModel, PreTrainedTokenizerBase
 from transformers.integrations import is_deepspeed_zero3_enabled
-from transformers.modeling_utils import is_fsdp_enabled
+from transformers.modeling_utils import is_fsdp_enabled, is_hsdp_enabled
 
 from ..extras import logging
 from ..extras.misc import infer_optim_dtype
@@ -182,7 +182,7 @@ def patch_config(
     init_kwargs["low_cpu_mem_usage"] = model_args.low_cpu_mem_usage and (not is_deepspeed_zero3_enabled())
 
     # fsdp/deepspeed zero3 does not need device map
-    if not (is_deepspeed_zero3_enabled() or is_fsdp_enabled()) and init_kwargs["low_cpu_mem_usage"]:
+    if not (is_deepspeed_zero3_enabled() or is_fsdp_enabled() or is_hsdp_enabled()) and init_kwargs["low_cpu_mem_usage"]:
         if "device_map" not in init_kwargs and model_args.device_map:
             init_kwargs["device_map"] = model_args.device_map  # device map requires low_cpu_mem_usage=True
 

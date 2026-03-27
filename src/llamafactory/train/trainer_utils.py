@@ -26,7 +26,7 @@ import torch
 import torch.nn.functional as F
 from transformers import Trainer
 from transformers.integrations import is_deepspeed_zero3_enabled
-from transformers.modeling_utils import is_fsdp_enabled
+from transformers.modeling_utils import is_fsdp_enabled, is_hsdp_enabled
 from transformers.optimization import get_scheduler
 from transformers.pytorch_utils import ALL_LAYERNORM_LAYERS
 from transformers.trainer_pt_utils import get_parameter_names
@@ -486,7 +486,7 @@ def _create_adam_mini_optimizer(
         betas=(training_args.adam_beta1, training_args.adam_beta2),
         eps=training_args.adam_epsilon,
         weight_decay=training_args.weight_decay,
-        model_sharding=is_fsdp_enabled() or is_deepspeed_zero3_enabled(),
+        model_sharding=is_fsdp_enabled() or is_hsdp_enabled() or is_deepspeed_zero3_enabled(),
         dim=hidden_size,
         n_heads=num_q_head,
         n_kv_heads=num_kv_head,
