@@ -745,5 +745,14 @@
       "prompt": "content"
     },
     "folder": "python"
+  },
+  "gsm8k": {
+    "hf_hub_url": "openai/gsm8k",
+    "subset": "main",
+    "split": "train",
+    "columns": {
+      "prompt": "question",
+      "response": "answer"
+    }
   }
 }
