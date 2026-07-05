@@ -165,10 +165,6 @@ class HyperParallelTrainer(CustomSeq2SeqTrainer):
         self._cp_size = hp_args.cp_size
         self._cp_rank = get_cp_rank(hp_args) if self._cp_size > 1 else 0
         self._dp_rank = get_dp_rank(hp_args) if self._cp_size > 1 else get_platform().get_rank()
-        if self._cp_size > 1:
-            # Match the Qwen3VL processor path: CP patches model loss directly, so avoid Trainer's extra
-            # num_items/world-size loss scaling.
-            self.model_accepts_loss_kwargs = False
 
         # Prepare ref_model with the same CP + HSDP path as the train model.
         self.ref_model = ref_model
