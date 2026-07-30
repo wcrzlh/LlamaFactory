@@ -340,22 +340,22 @@ class MultiModalDataCollatorForSeq2Seq(DataCollatorForSeq2Seq):
 
         fake_input_ids = []
         has_dummy_image = False
-        if (
-            self.template.mm_plugin.image_token is not None and sum(batch_imglens) == 0 and sum(batch_vidlens) == 0
-        ):  # avoid process hanging in zero3/fsdp case
-            fake_messages = [{"role": "user", "content": IMAGE_PLACEHOLDER}]
-            fake_images = [Image.new("RGB", (64, 64), (255, 255, 255))]
-            fake_messages = self.template.mm_plugin.process_messages(
-                fake_messages, fake_images, [], [], self.processor
-            )
-            _fake_input_ids = self.tokenizer.encode(fake_messages[0]["content"], add_special_tokens=False)
-            _fake_input_ids, _ = self.template.mm_plugin.process_token_ids(
-                _fake_input_ids, None, fake_images, [], [], self.tokenizer, self.processor
-            )
-            fake_input_ids.extend(_fake_input_ids)
-            batch_images = fake_images
-            batch_imglens[0] = 1
-            has_dummy_image = True
+        # if (
+        #     self.template.mm_plugin.image_token is not None and sum(batch_imglens) == 0 and sum(batch_vidlens) == 0
+        # ):  # avoid process hanging in zero3/fsdp case
+        #     fake_messages = [{"role": "user", "content": IMAGE_PLACEHOLDER}]
+        #     fake_images = [Image.new("RGB", (64, 64), (255, 255, 255))]
+        #     fake_messages = self.template.mm_plugin.process_messages(
+        #         fake_messages, fake_images, [], [], self.processor
+        #     )
+        #     _fake_input_ids = self.tokenizer.encode(fake_messages[0]["content"], add_special_tokens=False)
+        #     _fake_input_ids, _ = self.template.mm_plugin.process_token_ids(
+        #         _fake_input_ids, None, fake_images, [], [], self.tokenizer, self.processor
+        #     )
+        #     fake_input_ids.extend(_fake_input_ids)
+        #     batch_images = fake_images
+        #     batch_imglens[0] = 1
+        #     has_dummy_image = True
 
         if (
             self.template.mm_plugin.audio_token is not None and sum(batch_audlens) == 0
